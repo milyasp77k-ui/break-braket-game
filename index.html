@@ -1,11 +1,13 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <title>Break Braket v2</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=1.5" />
 </head>
+
 <body>
   <div class="wrap">
     <header>
@@ -13,29 +15,32 @@
       <div class="controls">
         <button id="btnRestart">Restart</button>
         <button id="btnToggleSound" class="secondary">Sound: On</button>
-        <button id="btnToggleMusic" class="secondary">Music: On</button>
+        <button id="btnToggleMusic" class="secondary">Music: Off</button>
       </div>
     </header>
 
     <main class="board">
       <canvas id="gameCanvas" width="960" height="540" aria-label="Break Braket game"></canvas>
       <!-- place immediately after the <canvas> element -->
-        <div class="credit">made by <span>ilyas roy</span></div>
+      <div class="credit">made by <span>ilyas roy</span></div>
 
 
       <div class="hud">
-        <div>Score: <span id="score" class="big">0</span></div>
-        <div>Lives: <span id="lives" class="big">3</span></div>
-        <div>Level: <span id="level" class="big">1</span></div>
+        <div>Score<span id="score" class="big">0</span></div>
+        <div>Multiplier<span id="multiplier" class="big">x1</span></div>
+        <div>Lives<span id="lives" class="big">3</span></div>
+        <div>Level<span id="level" class="big">1</span></div>
       </div>
 
-      <div class="hint">Controls: ← / → or A / D to move, mouse to move, Space or click to launch/pause. Catch power-ups.</div>
+      <div class="hint">Controls: ← / → or A / D to move, mouse to move, Space or click to launch/pause. Catch
+        power-ups.</div>
       <div id="overlay" class="overlay hidden"></div>
     </main>
 
     <footer>Break Braket v2 — WebAudio music & sound • New power-ups & levels</footer>
   </div>
 
-  <script src="js/game.js" defer></script>
+  <script src="js/game.js?v=1.5" defer></script>
 </body>
+
 </html>
