@@ -154,17 +154,22 @@ footer{
 
 /* Responsive tweaks */
 @media (max-width:700px){
-  .wrap { padding: 12px; }
-  h1{font-size:18px}
-  .controls button{padding:8px 12px;font-size:12px}
-  .overlay{width:90%; padding: 24px; font-size: 24px;}
-  .hud { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-  .board { padding: 6px; border-radius: 12px; }
-  .hint { font-size: 11px; padding: 8px 16px; }
+  .wrap { padding: 10px; }
+  header { flex-direction: column; gap: 12px; align-items: center; }
+  h1{font-size:20px; text-align: center; margin: 0;}
+  .controls { width: 100%; justify-content: center; flex-wrap: wrap; gap: 8px; }
+  .controls button{padding:12px 10px; font-size:13px; flex: 1 1 calc(50% - 8px); min-width: 120px;}
+  .overlay{width:92%; padding: 24px; font-size: 22px;}
+  .hud { grid-template-columns: repeat(2, 1fr); gap: 6px; padding: 12px 0; }
+  .hud > div { padding: 8px 4px; }
+  .big { font-size: 18px; }
+  .board { padding: 6px; border-radius: 16px; width: 100%; }
+  .hint { font-size: 11px; padding: 12px; border-radius: 12px; line-height: 1.4; margin-top: 12px; }
 }
-@media (max-width:400px){
-  .hud { grid-template-columns: 1fr; }
-  h1 { display: none; } /* Hide title to save space on tiny screens */
+@media (max-width:480px){
+  .controls button { flex: 1 1 calc(50% - 6px); min-width: 0; padding: 10px 4px; font-size: 12px; }
+  .hud { gap: 4px; }
+  h1 { font-size: 18px; }
 }
 /* Add near the top of css/style.css */
 

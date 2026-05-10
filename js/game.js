@@ -22,6 +22,7 @@
   const livesEl = document.getElementById('lives');
   const levelEl = document.getElementById('level');
   const btnRestart = document.getElementById('btnRestart');
+  const btnPause = document.getElementById('btnPause');
   const btnToggleSound = document.getElementById('btnToggleSound');
   const btnToggleMusic = document.getElementById('btnToggleMusic');
   const overlay = document.getElementById('overlay');
@@ -203,24 +204,33 @@
     floatingTexts.push({ x, y, text, life: 1.0, color });
   }
 
-  // Fit canvas responsively
+  // Fit canvas responsively (mainly for initial orientation/setup)
   function fitCanvas() {
-    const containerW = Math.min(window.innerWidth - 20, 980);
-    const scale = containerW / W;
-    canvas.style.width = Math.round(W * scale) + 'px';
-    canvas.style.height = Math.round(H * scale) + 'px';
+    // We let CSS handle the width: 100% and height: auto
+    // But we can trigger a redraw or check if needed.
+    // This function is now mostly a placeholder for any resolution-specific logic.
   }
   window.addEventListener('resize', fitCanvas);
   fitCanvas();
 
   // Input handling
   const keys = {};
+  
+  function handleAction() {
+    if (audioCtx && audioCtx.state === 'suspended' && (soundOn || musicOn)) audioCtx.resume();
+    if (balls.every(b => b.stuck)) {
+      launchBall();
+    } else {
+      running = !running;
+      if (btnPause) btnPause.textContent = running ? 'Pause' : 'Resume';
+    }
+  }
+
   window.addEventListener('keydown', (e) => {
     keys[e.key] = true;
     if (e.key === ' ') {
       e.preventDefault();
-      if (balls.every(b => b.stuck)) launchBall();
-      else running = !running;
+      handleAction();
     }
   });
   window.addEventListener('keyup', (e) => keys[e.key] = false);
@@ -234,6 +244,7 @@
   });
 
   // Touch controls
+  let lastTouchX = null;
   const handleTouch = (e) => {
     if (e.touches.length > 0) {
       e.preventDefault();
@@ -241,19 +252,28 @@
       const rect = canvas.getBoundingClientRect();
       const scaleX = W / rect.width;
       const mouseX = (touch.clientX - rect.left) * scaleX;
+      
       paddle.x = Math.max(10, Math.min(W - paddle.w - 10, mouseX - paddle.w / 2));
       if (balls[0] && balls[0].stuck) {
         balls[0].x = paddle.x + paddle.w / 2;
       }
+      lastTouchX = touch.clientX;
     }
   };
+
   canvas.addEventListener('touchstart', handleTouch, {passive: false});
   canvas.addEventListener('touchmove', handleTouch, {passive: false});
+  canvas.addEventListener('touchend', (e) => {
+    // If it was just a tap (no significant movement), treat as action
+    // We can also just rely on the fact that click might be blocked, 
+    // but a touchend without touchmove is a tap.
+    // However, to keep it simple and robust:
+    if (balls.every(b => b.stuck)) handleAction();
+  }, {passive: false});
 
-  canvas.addEventListener('click', () => {
-    if (audioCtx && audioCtx.state === 'suspended' && (soundOn || musicOn)) audioCtx.resume();
-    if (balls.every(b => b.stuck)) launchBall();
-    else running = !running;
+  canvas.addEventListener('click', (e) => {
+    // Prevent double triggers if touch already handled it
+    handleAction();
   });
 
   // Launch ball
@@ -873,7 +893,7 @@
       ctx.fillStyle = '#cfeee6';
       ctx.font = '16px Outfit, Arial';
       ctx.textAlign = 'center';
-      ctx.fillText('Press Space or Click to Launch', W/2, H/2+6);
+      ctx.fillText('Press Space, Click, or Tap to Launch', W/2, H/2+6);
       ctx.textAlign = 'left';
     }
 
@@ -908,6 +928,12 @@
     score = 0; lives = 3; level = 1; startNewGame();
     if (audioCtx && audioCtx.state === 'suspended' && (soundOn || musicOn)) audioCtx.resume();
   });
+
+  if (btnPause) {
+    btnPause.addEventListener('click', () => {
+      handleAction();
+    });
+  }
 
   btnToggleSound.addEventListener('click', () => {
     soundOn = !soundOn;
